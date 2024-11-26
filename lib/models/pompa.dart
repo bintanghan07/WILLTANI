@@ -29,7 +29,7 @@ class Pompa {
       status: json['status'],
       auto: json['auto'],
       keterangan: json['keterangan'],
-      perangkatId: int.parse(json['perangkat_id']),
+      perangkatId: json['perangkat_id'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       deletedAt: json['deleted_at'] != null

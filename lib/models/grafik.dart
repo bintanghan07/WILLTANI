@@ -14,8 +14,11 @@ class GrafikM {
     return GrafikM(
       name: json['name'],
       labels: List<String>.from(json['labels']), // Convert the labels from JSON
-      data: List<double>.from(json['data']
-          .map((item) => double.parse(item))), // Convert data to double
+       data: List<double>.from(
+      json['data'].map((item) => 
+        item is num ? item.toDouble() : double.parse(item.toString())
+      )
+    ), // Safely handle int and String types // Convert data to double
     );
   }
 

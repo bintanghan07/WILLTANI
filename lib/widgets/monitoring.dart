@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +6,6 @@ import 'package:webagro/chopper_api/api_client.dart';
 import 'package:webagro/models/greenhouse.dart';
 import 'package:webagro/models/sensor.dart';
 import 'package:webagro/widgets/custom_appbar.dart';
-import 'package:webagro/utils/responsiveLayout.dart';
 
 class Monitoring extends StatefulWidget {
   const Monitoring({super.key});
@@ -40,7 +38,6 @@ class _MonitoringState extends State<Monitoring> {
   }
 
   void _startFetchingSensorData() {
-    // This method will start a timer that calls _fetchLatestSensor every 30 seconds (or any interval you want)
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) {
       _fetchLatestSensor(); // Call your function to fetch the latest sensor data
     });
@@ -71,8 +68,7 @@ class _MonitoringState extends State<Monitoring> {
   }
 
   Future<void> _fetchGreenhouses() async {
-    final response =
-        await apiService.getAllGreenhouses('Bearer $token'); // Pass the token
+    final response = await apiService.getAllGreenhouses('Bearer $token'); // Pass the token
 
     if (response.isSuccessful) {
       setState(() {
@@ -81,7 +77,6 @@ class _MonitoringState extends State<Monitoring> {
             .toList();
       });
     } else {
-      // Handle error
       print('Failed to fetch greenhouses: ${response.error}');
     }
   }
@@ -92,44 +87,44 @@ class _MonitoringState extends State<Monitoring> {
       appBar: const CustomAppBar(
         activityName: "Monitoring",
       ),
-      body: ResponsiveLayout(
-        largeScreen: _buildContent(),
-        smallScreen: _buildContent(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isLargeScreen = constraints.maxWidth > 800; // Adjust width for desktop
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView( // Membungkus layout dengan SingleChildScrollView
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _buildDropdown(),
+                  const SizedBox(height: 20),
+                  if (selectedGreenhouse == 0)
+                    const Center(
+                      child: Text(
+                          'Silakan pilih Greenhouse untuk melihat data monitoring.'),
+                    )
+                  else
+                    Container(
+                      child: latestSensorData == null
+                          ? const Center(child: CircularProgressIndicator())
+                          : isLargeScreen
+                              ? _buildDataTable() // Desktop view
+                              : _buildDataList(), // Mobile view
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildContent() {
-    final bool isLargeScreen = MediaQuery.of(context).size.width > 600;
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _buildDropdown(),
-          const SizedBox(height: 20),
-          if (selectedGreenhouse == 0)
-            const Center(
-              child: Text(
-                  'Silakan pilih Greenhouse untuk melihat data monitoring.'),
-            )
-          else
-            Expanded(
-                child: latestSensorData == null
-                    ? const Center(
-                        child:
-                            CircularProgressIndicator()) // Show loading indicator if sensor data is still being fetched
-                    : isLargeScreen
-                        ? _buildDataTable()
-                        : _buildDataList()),
-        ],
-      ),
-    );
-  }
-
+  // Menggunakan ListView agar dapat di-scroll
   Widget _buildDataList() {
     return ListView.builder(
-      shrinkWrap: true,
+      shrinkWrap: true, // Membuat ListView menyesuaikan ukuran konten
+      physics: const BouncingScrollPhysics(), // Agar scroll lebih responsif
       itemCount: latestSensorData!.length,
       itemBuilder: (context, index) {
         final item = Sensor.fromJson(latestSensorData![index]);
@@ -144,31 +139,24 @@ class _MonitoringState extends State<Monitoring> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Perangkat ${item.perangkatId}'),
-                    Text(
-                      DateFormat('dd-MM-yyyy HH:mm:ss').format(item.createdAt),
-                    ),
-                  ],
-                ),
-
-                // bagian iki perlu ditata sih.. konsul o pak dim
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildInfoTile(
-                        Icons.water_damage, "${item.sensorKelembaban}%"),
-                    _buildInfoTile(Icons.thermostat, "${item.sensorSuhu}°"),
-                    _buildInfoTile(Icons.wb_sunny, "${item.sensorLdr} lux")
+                    Text('Perangkat ${item.perangkatId?.toString() ?? 'N/A'}'),
+                    Text(DateFormat('dd-MM-yyyy HH:mm:ss').format(item.createdAt ?? DateTime.now())),
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // gangerti satuan e debit air
-                    _buildInfoTile(
-                        Icons.water_outlined, "${item.sensorWaterflow}"),
-                    _buildInfoTile(Icons.grain, "${item.sensorTds} ppm"),
-                    _buildInfoTile(Icons.waves, "${item.sensorVolume} L"),
+                    _buildInfoTile(Icons.water_damage, "${item.sensorKelembaban?.toString() ?? 'N/A'}%"),
+                    _buildInfoTile(Icons.thermostat, "${item.sensorSuhu?.toString() ?? 'N/A'}°"),
+                    _buildInfoTile(Icons.wb_sunny, "${item.sensorLdr?.toString() ?? 'N/A'} lux")
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildInfoTile(Icons.water_outlined, "${item.sensorWaterflow?.toString() ?? 'N/A'}"),
+                    _buildInfoTile(Icons.grain, "${item.sensorTds?.toString() ?? 'N/A'} ppm"),
+                    _buildInfoTile(Icons.waves, "${item.sensorVolume?.toString() ?? 'N/A'} L"),
                   ],
                 )
               ],
@@ -181,10 +169,9 @@ class _MonitoringState extends State<Monitoring> {
 
   Widget _buildInfoTile(IconData icon, String value) {
     return Card(
-      color: const Color.fromARGB(
-          255, 255, 255, 255), // Warna latar belakang ungu terang
+      color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -192,14 +179,12 @@ class _MonitoringState extends State<Monitoring> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 16.0, color: Colors.black),
-            const SizedBox(
-              width: 2,
-            ),
+            const SizedBox(width: 2),
             Text(
               value,
               style: const TextStyle(
                 fontSize: 16,
-                color: Colors.black, // Warna teks hitam untuk label
+                color: Colors.black,
               ),
             ),
           ],
@@ -237,10 +222,7 @@ class _MonitoringState extends State<Monitoring> {
               value: value.id,
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.eco,
-                    color: Colors.green,
-                  ),
+                  const Icon(Icons.eco, color: Colors.green),
                   const SizedBox(width: 8),
                   Text(
                     value.nama,
@@ -265,32 +247,33 @@ class _MonitoringState extends State<Monitoring> {
 
   Widget _buildDataTable() {
     return DataTable(
-        columns: const [
-          DataColumn(label: Text('Perangkat')),
-          DataColumn(label: Text('Tanggal')),
-          DataColumn(label: Text('Kelembaban')),
-          DataColumn(label: Text('Suhu')),
-          DataColumn(label: Text('Intensitas Cahaya')),
-          DataColumn(label: Text('Debit Air')),
-          DataColumn(label: Text('TDS')),
-          DataColumn(label: Text('Volume Air')),
-        ],
-        rows: latestSensorData!
-            .asMap()
-            .entries
-            .map(
-              (entry) => DataRow(cells: [
-                DataCell(Text('Perangkat ${entry.value['perangkat_id']!}')),
-                DataCell(Text(DateFormat('dd-MM-yyyy HH:mm:ss')
-                    .format(DateTime.parse(entry.value['created_at']!)))),
-                DataCell(Text(entry.value['sensor_kelembaban']!)),
-                DataCell(Text(entry.value['sensor_suhu']!)),
-                DataCell(Text(entry.value['sensor_ldr']!)),
-                DataCell(Text(entry.value['sensor_waterflow']!)),
-                DataCell(Text(entry.value['sensor_tds']!)),
-                DataCell(Text(entry.value['sensor_volume']!)),
-              ]),
-            )
-            .toList());
+      columns: const [
+        DataColumn(label: Text('Perangkat')),
+        DataColumn(label: Text('Tanggal')),
+        DataColumn(label: Text('Kelembaban')),
+        DataColumn(label: Text('Suhu')),
+        DataColumn(label: Text('Intensitas Cahaya')),
+        DataColumn(label: Text('Debit Air')),
+        DataColumn(label: Text('TDS')),
+        DataColumn(label: Text('Volume Air')),
+      ],
+      rows: latestSensorData!
+          .asMap()
+          .entries
+          .map(
+            (entry) => DataRow(cells: [
+              DataCell(Text('Perangkat ${entry.value['perangkat_id']?.toString() ?? 'N/A'}')),
+              DataCell(Text(DateFormat('dd-MM-yyyy HH:mm:ss')
+                  .format(DateTime.parse(entry.value['created_at'] ?? '1970-01-01T00:00:00')))),
+              DataCell(Text(entry.value['sensor_kelembaban']?.toString() ?? 'N/A')),
+              DataCell(Text(entry.value['sensor_suhu']?.toString() ?? 'N/A')),
+              DataCell(Text(entry.value['sensor_ldr']?.toString() ?? 'N/A')),
+              DataCell(Text(entry.value['sensor_waterflow']?.toString() ?? 'N/A')),
+              DataCell(Text(entry.value['sensor_tds']?.toString() ?? 'N/A')),
+              DataCell(Text(entry.value['sensor_volume']?.toString() ?? 'N/A')),
+            ]), 
+          )
+          .toList(),
+    );
   }
 }

@@ -1,13 +1,35 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webagro/chopper_api/api_client.dart';
-import 'package:webagro/models/grafik.dart';
 import 'package:webagro/models/greenhouse.dart';
 import 'package:webagro/utils/responsiveLayout.dart';
 import 'package:webagro/widgets/custom_appbar.dart';
+
+// Model untuk Grafik
+class GrafikM {
+  final String name;
+  final List<String> labels;
+  final List<double> data;
+
+  GrafikM({
+    required this.name,
+    required this.labels,
+    required this.data,
+  });
+
+  // Parsing JSON ke objek GrafikM
+  factory GrafikM.fromJson(Map<String, dynamic> json) {
+    return GrafikM(
+      name: json['name'] as String,
+      labels: List<String>.from(json['labels']),
+      data: List<double>.from(
+        json['data'].map((item) => (item is int ? item.toDouble() : item)),
+      ),
+    );
+  }
+}
 
 class Grafik extends StatefulWidget {
   const Grafik({super.key});
@@ -24,7 +46,7 @@ class _GrafikState extends State<Grafik> {
   final apiService = ApiClient().apiService;
 
   List<GreenhouseM> greenhouses = [];
-  List<dynamic>? latestGraphData;
+  List<GrafikM>? latestGraphData;
 
   @override
   void initState() {
@@ -50,14 +72,23 @@ class _GrafikState extends State<Grafik> {
         'Bearer $token', selectedGreenhouse); // Pass the token
     if (response.isSuccessful) {
       final graphData = response.body["data"];
-      if (graphData != null) {
+      print('Received Graph Data: $graphData');
+      if (graphData != null && graphData.isNotEmpty) {
         setState(() {
           latestGraphData =
-              graphData.map((graph) => GrafikM.fromJson(graph)).toList();
+              graphData.map<GrafikM>((graph) => GrafikM.fromJson(graph)).toList();
+        });
+      } else {
+        print('No data available in the response');
+        setState(() {
+          latestGraphData = [];
         });
       }
     } else {
       print('Failed to fetch sensor data: ${response.error}');
+      setState(() {
+        latestGraphData = [];
+      });
     }
   }
 
@@ -80,7 +111,6 @@ class _GrafikState extends State<Grafik> {
             .toList();
       });
     } else {
-      // Handle error
       print('Failed to fetch greenhouses: ${response.error}');
     }
   }
@@ -92,8 +122,8 @@ class _GrafikState extends State<Grafik> {
         activityName: "Grafik",
       ),
       body: ResponsiveLayout(
-        largeScreen: _buildContent(4), // 2 kolom untuk layar besar
-        smallScreen: _buildContent(1), // 1 kolom untuk layar kecil
+        largeScreen: _buildContent(4),
+        smallScreen: _buildContent(1),
       ),
     );
   }
@@ -161,8 +191,7 @@ class _GrafikState extends State<Grafik> {
           if (selectedGreenhouse != 0)
             SizedBox(
               height: MediaQuery.of(context).size.height,
-              width:
-                  MediaQuery.of(context).size.width, // Adjust width as needed
+              width: MediaQuery.of(context).size.width,
               child: GridView.count(
                 crossAxisCount: crossAxisCount,
                 children: [
@@ -198,8 +227,9 @@ class _GrafikState extends State<Grafik> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(left: 18, top: 12),
-              // Pass the latestGraphData to the chart function
-              child: LineChart(chart(latestGraphData)),
+              child: latestGraphData == null || latestGraphData.data.isEmpty
+                  ? const Center(child: Text("No data available"))
+                  : LineChart(chart(latestGraphData)),
             ),
           ),
         ],
@@ -230,10 +260,9 @@ class _GrafikState extends State<Grafik> {
             showTitles: true,
             getTitlesWidget: (value, meta) {
               int index = value.toInt();
-              // Ensure index is within bounds of the labels array
               if (index >= 0 && index < latestGraphData.labels.length) {
                 return RotatedBox(
-                  quarterTurns: 3, // Rotates the text vertically
+                  quarterTurns: 3,
                   child: Text(
                     latestGraphData.labels[index],
                     style: const TextStyle(fontSize: 12),
@@ -241,11 +270,10 @@ class _GrafikState extends State<Grafik> {
                   ),
                 );
               }
-              return const SizedBox
-                  .shrink(); // Return empty if index out of range
+              return const SizedBox.shrink();
             },
-            interval: 1, // Show labels at every point
-            reservedSize: 80, // Adjust this for spacing of labels
+            interval: 1,
+            reservedSize: 80,
           ),
         ),
       ),
@@ -258,7 +286,8 @@ class _GrafikState extends State<Grafik> {
         LineChartBarData(
           spots: List.generate(
             latestGraphData.data.length,
-            (index) => FlSpot(index.toDouble(), latestGraphData.data[index]),
+            (index) =>
+                FlSpot(index.toDouble(), latestGraphData.data[index]),
           ),
           isCurved: true,
           color: Colors.blue,

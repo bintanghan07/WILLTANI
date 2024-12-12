@@ -299,7 +299,7 @@ class _SmallChildState extends State<SmallChild> {
             ),
             borderRadius: BorderRadius.circular(10.0),
           ),
-          child: Form(
+          child: SingleChildScrollView(
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,

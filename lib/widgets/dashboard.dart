@@ -7,6 +7,7 @@ import 'package:webagro/models/sensor.dart';
 import 'package:webagro/widgets/custom_appbar.dart';
 import 'package:webagro/models/greenhouse.dart';
 
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -94,7 +95,6 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dropdown untuk pemilihan Greenhouse
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: DecoratedBox(
@@ -151,7 +151,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-            // Render berdasarkan pilihan Greenhouse
             if (selectedGreenhouse == 0)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -167,7 +166,6 @@ class _DashboardState extends State<Dashboard> {
                 child: LayoutBuilder(
                   builder: (context, constraints) {
                     if (constraints.maxWidth > 600) {
-                      // Tata letak horizontal untuk layar besar
                       return Row(
                         children: [
                           Expanded(
@@ -206,7 +204,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                           ),
                           const SizedBox(
-                              width: 16.0), // Jarak antara kolom kiri dan kanan
+                              width: 16.0),
                           Expanded(
                             flex: 2,
                             child: Column(
@@ -235,7 +233,6 @@ class _DashboardState extends State<Dashboard> {
                         ],
                       );
                     } else {
-                      // Tata letak vertikal untuk layar kecil
                       return Column(
                         children: [
                           Expanded(
@@ -265,13 +262,13 @@ class _DashboardState extends State<Dashboard> {
                           ),
                           const SizedBox(
                               height:
-                                  16.0), // Jarak antara bagian notifikasi/gambar dan suhu
+                                  16.0), 
                           Expanded(
                             flex: 3,
                             child: latestSensorData == null
                                 ? const Center(
                                     child:
-                                        CircularProgressIndicator()) // Show loading indicator if sensor data is still being fetched
+                                        CircularProgressIndicator()) 
                                 : GridView.count(
                                     crossAxisCount: 2,
                                     mainAxisSpacing: 8.0,
@@ -315,22 +312,22 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _buildInfoTile(IconData icon, String value, String label) {
     return Card(
-      color: const Color(0xFFF7F4FD), // Warna latar belakang ungu terang
+      color: const Color(0xFFF7F4FD), 
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40.0, color: Colors.black), // Warna ikon hitam
+            Icon(icon, size: 40.0, color: Colors.black), 
             const SizedBox(height: 8.0),
             Text(
               value,
               style: const TextStyle(
-                fontSize: 24,
-                color: Colors.black, // Warna teks hitam untuk nilai
+                fontSize: 12,
+                color: Colors.black, 
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -338,7 +335,7 @@ class _DashboardState extends State<Dashboard> {
               label,
               style: const TextStyle(
                 fontSize: 16,
-                color: Colors.black, // Warna teks hitam untuk label
+                color: Colors.black,
               ),
             ),
           ],
@@ -352,7 +349,7 @@ class _DashboardState extends State<Dashboard> {
     return Card(
       color: color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+        borderRadius: BorderRadius.circular(16.0), 
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -368,7 +365,7 @@ class _DashboardState extends State<Dashboard> {
                     title,
                     style: const TextStyle(
                       fontSize: 24,
-                      color: Colors.black, // Warna teks hitam untuk judul
+                      color: Colors.black, 
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -376,7 +373,7 @@ class _DashboardState extends State<Dashboard> {
                 Stack(
                   children: [
                     Icon(icon,
-                        size: 30.0, color: Colors.black), // Warna ikon hitam
+                        size: 30.0, color: Colors.black), 
                     if (notificationCount > 0)
                       Positioned(
                         right: 0,
@@ -397,10 +394,10 @@ class _DashboardState extends State<Dashboard> {
             ),
             const SizedBox(height: 16.0),
             const Text(
-              'Subtitle', // Tambahkan subtitle jika diperlukan
+              'Subtitle',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.black, // Warna teks hitam untuk subtitle
+                color: Colors.black, 
               ),
             ),
           ],
@@ -412,16 +409,16 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildImageTile(String gambar) {
     String baseUrl = "https://apiv2.willtani.id/public/uploads/greenhouse/";
     return Card(
-      color: const Color(0xFFF7F4FD), // Warna latar belakang ungu terang
+      color: const Color(0xFFF7F4FD), 
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+        borderRadius: BorderRadius.circular(16.0), 
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+              borderRadius: BorderRadius.circular(16.0),
               child: Image.network(
                 "$baseUrl$gambar",
                 fit: BoxFit.cover,

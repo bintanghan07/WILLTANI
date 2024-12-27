@@ -35,10 +35,6 @@ class _KontrolState extends State<Kontrol> {
   Sensor? latestSensorData;
   KontrolM? latestKontrolData;
 
-  // Variabel untuk menyimpan pilihan greenhouse
-
-  // Variabel yang akan menyimpan nilai setting
-
   @override
   void initState() {
     super.initState();
@@ -46,23 +42,21 @@ class _KontrolState extends State<Kontrol> {
   }
 
   Future<void> _initialize() async {
-    await _getToken(); // Wait for token retrieval
+    await _getToken(); 
     if (token != null) {
-      await _fetchGreenhouses(); // Only fetch greenhouses if token is set
+      await _fetchGreenhouses(); 
     }
   }
 
   void _startFetchingSensorData() {
-    // This method will start a timer that calls _fetchLatestSensor every 30 seconds (or any interval you want)
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) {
-      _fetchLatestSensor(); // Call your function to fetch the latest sensor data
+      _fetchLatestSensor(); 
     });
   }
 
   Future<void> _fetchLatestSensor() async {
     final response = await apiService.getLatestSensorData(
-        'Bearer $token', selectedGreenhouse); // Pass the token
-
+        'Bearer $token', selectedGreenhouse); 
     if (response.isSuccessful) {
       final sensorData = response.body["data"]["sensor"];
       if (sensorData != null) {
@@ -79,7 +73,7 @@ class _KontrolState extends State<Kontrol> {
 
   Future<void> _fetchLatestPompa() async {
     final response = await apiService.getLatestPompaData('Bearer $token',
-        int.parse(latestSensorData!.perangkatId)); // Pass the token
+        int.parse(latestSensorData!.perangkatId)); 
 
     if (response.isSuccessful) {
       final pompaData = response.body['data'];
@@ -101,8 +95,7 @@ class _KontrolState extends State<Kontrol> {
 
   Future<void> _fetchLatestKontrol() async {
     final response = await apiService.getKontrolData('Bearer $token',
-        int.parse(latestSensorData!.perangkatId)); // Pass the token
-
+        int.parse(latestSensorData!.perangkatId)); 
     if (response.isSuccessful) {
       final kontrolData = KontrolM.fromJson(response.body['data']);
       setState(() {
@@ -121,12 +114,10 @@ class _KontrolState extends State<Kontrol> {
       "perangkat_id": idPerangkat
     };
     final response = await apiService.updatePompa('Bearer $token',
-        int.parse(latestSensorData!.perangkatId), body); // Pass the token
-
+        int.parse(latestSensorData!.perangkatId), body); 
     if (response.isSuccessful) {
       final sensorData = response.body["data"];
       if (sensorData != null) {
-        //TODO : idk
       }
     } else {
       print('Failed to fetch sensor data: ${response.error}');
@@ -143,7 +134,7 @@ class _KontrolState extends State<Kontrol> {
 
   Future<void> _fetchGreenhouses() async {
     final response =
-        await apiService.getAllGreenhouses('Bearer $token'); // Pass the token
+        await apiService.getAllGreenhouses('Bearer $token'); 
 
     if (response.isSuccessful) {
       setState(() {
@@ -152,7 +143,6 @@ class _KontrolState extends State<Kontrol> {
             .toList();
       });
     } else {
-      // Handle error
       print('Failed to fetch greenhouses: ${response.error}');
     }
   }
@@ -164,8 +154,8 @@ class _KontrolState extends State<Kontrol> {
         activityName: "Kontrol",
       ),
       body: ResponsiveLayout(
-        largeScreen: _buildContent(4), // 4 kolom untuk layar besar
-        smallScreen: _buildContent(2), // 2 kolom untuk layar kecil
+        largeScreen: _buildContent(4),
+        smallScreen: _buildContent(2), 
       ),
     );
   }
@@ -235,7 +225,6 @@ class _KontrolState extends State<Kontrol> {
               child: Text('Silakan pilih Greenhouse untuk melihat Kontrol.'),
             ),
           if (selectedGreenhouse > 0) ...[
-            // Konten lainnya hanya ditampilkan jika greenhouse sudah dipilih
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: latestSensorData == null
@@ -249,20 +238,19 @@ class _KontrolState extends State<Kontrol> {
                   value: isAutomaticMode,
                   onChanged: (value) {
                     setState(() {
-                      isAutomaticMode = value; // Update the automatic mode
+                      isAutomaticMode = value; 
                       isManualSaklar =
-                          !value; // Set manual switch off if automatic is on
+                          !value; 
                       automaticMode =
-                          value ? "HIDUP" : "MATI"; // Update status for API
+                          value ? "HIDUP" : "MATI"; 
                       manualSaklar = isManualSaklar
                           ? "HIDUP"
-                          : "MATI"; // Update manual status for API
+                          : "MATI"; 
                     });
                     if (latestSensorData != null) {
                       _updatePompa(manualSaklar!, automaticMode!,
                           int.parse(latestSensorData!.perangkatId));
                     } else {
-                      // Handle case where latestSensorData is null, e.g., show a message
                       print('Sensor data is not yet available. Please wait.');
                     }
                   },
@@ -273,18 +261,16 @@ class _KontrolState extends State<Kontrol> {
                   value: isManualSaklar,
                   onChanged: (value) {
                     if (!isAutomaticMode) {
-                      // Allow change only if automatic mode is off
                       setState(() {
-                        isManualSaklar = value; // Update the manual switch
+                        isManualSaklar = value; 
                         manualSaklar = value
                             ? "HIDUP"
-                            : "MATI"; // Update manual status for API
+                            : "MATI"; 
                       });
                       if (latestSensorData != null) {
                         _updatePompa(manualSaklar!, automaticMode!,
                             int.parse(latestSensorData!.perangkatId));
                       } else {
-                        // Handle case where latestSensorData is null, e.g., show a message
                         print('Sensor data is not yet available. Please wait.');
                       }
                     }
@@ -299,7 +285,7 @@ class _KontrolState extends State<Kontrol> {
               child: latestSensorData == null
                   ? const Center(
                       child:
-                          CircularProgressIndicator()) // Show loading indicator if sensor data is still being fetched
+                          CircularProgressIndicator()) 
                   : GridView.count(
                       shrinkWrap: true,
                       crossAxisCount: crossAxisCount,
@@ -321,7 +307,6 @@ class _KontrolState extends State<Kontrol> {
                       ],
                     ),
             ),
-            // Kotak untuk pengaturan
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
@@ -331,7 +316,7 @@ class _KontrolState extends State<Kontrol> {
                   child: latestKontrolData == null
                       ? const Center(
                           child:
-                              CircularProgressIndicator()) // Show loading indicator if sensor data is still being fetched
+                              CircularProgressIndicator()) 
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -395,21 +380,21 @@ class _KontrolState extends State<Kontrol> {
   Widget _buildImageTile(String gambar) {
     String baseUrl = "https://apiv2.willtani.id/public/uploads/greenhouse/";
     return Card(
-      color: const Color(0xFFF7F4FD), // Warna latar belakang ungu terang
+      color: const Color(0xFFF7F4FD),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ClipRRect(
-              borderRadius: BorderRadius.circular(16.0), // Sudut yang membulat
+              borderRadius: BorderRadius.circular(16.0), 
               child: AspectRatio(
-                aspectRatio: 3 / 1, // Adjust the aspect ratio as needed
+                aspectRatio: 3 / 1, 
                 child: Image.network(
                   "$baseUrl$gambar",
                   fit: BoxFit.cover,
-                  width: double.infinity, // Match the parent's width
+                  width: double.infinity, 
                 ),
               )),
         ],

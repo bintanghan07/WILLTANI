@@ -10,7 +10,7 @@ import 'package:webagro/chopper_api/api_client.dart';
 import 'package:webagro/models/greenhouse.dart';
 import 'package:webagro/models/perangkat.dart';
 import 'package:webagro/models/jenistanaman.dart'
-    as jenistanaman; // Assuming you have this model
+    as jenistanaman; 
 import 'package:webagro/widgets/custom_appbar.dart';
 import 'package:webagro/widgets/edit_greenhouse.dart';
 import 'package:webagro/widgets/edit_perangkat.dart';
@@ -104,7 +104,6 @@ class _GreenhouseState extends State<Greenhouse> {
 
   void _handleError(String message) {
     print(message);
-    // Add any error UI handling if needed
   }
 
   @override
@@ -379,7 +378,7 @@ class _GreenhouseState extends State<Greenhouse> {
                       ),
                     ),
                   );
-                  _fetchGreenhouses(); // Refresh after editing
+                  _fetchGreenhouses(); 
                 },
                 icon: const Icon(Icons.edit),
               ),
@@ -396,14 +395,14 @@ class _GreenhouseState extends State<Greenhouse> {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(false); // Return false if user cancels
+                                  .pop(false); 
                             },
                             child: const Text("No"),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(true); // Return true if user confirms
+                                  .pop(true); 
                             },
                             child: const Text("Yes"),
                           ),
@@ -413,7 +412,6 @@ class _GreenhouseState extends State<Greenhouse> {
                   );
 
                   if (confirmDelete == true) {
-                    // Call delete function if user confirmed
                     _deleteGreenhouse(greenhouse.id);
                   }
                 },
@@ -475,14 +473,14 @@ class _GreenhouseState extends State<Greenhouse> {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(false); // Return false if user cancels
+                                  .pop(false); 
                             },
                             child: const Text("No"),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(true); // Return true if user confirms
+                                  .pop(true); 
                             },
                             child: const Text("Yes"),
                           ),
@@ -492,7 +490,7 @@ class _GreenhouseState extends State<Greenhouse> {
                   );
 
                   if (confirmDelete == true) {
-                    // Call delete function if user confirmed
+                   
                     _deletePerangkat(perangkat.id);
                   }
                 },

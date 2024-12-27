@@ -31,21 +31,21 @@ class _MonitoringState extends State<Monitoring> {
   }
 
   Future<void> _initialize() async {
-    await _getToken(); // Wait for token retrieval
+    await _getToken(); 
     if (token != null) {
-      await _fetchGreenhouses(); // Only fetch greenhouses if token is set
+      await _fetchGreenhouses(); 
     }
   }
 
   void _startFetchingSensorData() {
     timer = Timer.periodic(const Duration(seconds: 30), (Timer t) {
-      _fetchLatestSensor(); // Call your function to fetch the latest sensor data
+      _fetchLatestSensor(); 
     });
   }
 
   Future<void> _fetchLatestSensor() async {
     final response = await apiService.getLatestSensorData(
-        'Bearer $token', selectedGreenhouse); // Pass the token
+        'Bearer $token', selectedGreenhouse); 
 
     if (response.isSuccessful) {
       final sensorData = response.body["data"]["sensor"]["perangkat"]["sensor"];
@@ -68,7 +68,7 @@ class _MonitoringState extends State<Monitoring> {
   }
 
   Future<void> _fetchGreenhouses() async {
-    final response = await apiService.getAllGreenhouses('Bearer $token'); // Pass the token
+    final response = await apiService.getAllGreenhouses('Bearer $token'); 
 
     if (response.isSuccessful) {
       setState(() {
@@ -89,10 +89,10 @@ class _MonitoringState extends State<Monitoring> {
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          bool isLargeScreen = constraints.maxWidth > 800; // Adjust width for desktop
+          bool isLargeScreen = constraints.maxWidth > 800; 
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView( // Membungkus layout dengan SingleChildScrollView
+            child: SingleChildScrollView( 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -108,8 +108,8 @@ class _MonitoringState extends State<Monitoring> {
                       child: latestSensorData == null
                           ? const Center(child: CircularProgressIndicator())
                           : isLargeScreen
-                              ? _buildDataTable() // Desktop view
-                              : _buildDataList(), // Mobile view
+                              ? _buildDataTable() 
+                              : _buildDataList(), 
                     ),
                 ],
               ),
@@ -120,11 +120,10 @@ class _MonitoringState extends State<Monitoring> {
     );
   }
 
-  // Menggunakan ListView agar dapat di-scroll
   Widget _buildDataList() {
     return ListView.builder(
-      shrinkWrap: true, // Membuat ListView menyesuaikan ukuran konten
-      physics: const BouncingScrollPhysics(), // Agar scroll lebih responsif
+      shrinkWrap: true, 
+      physics: const BouncingScrollPhysics(), 
       itemCount: latestSensorData!.length,
       itemBuilder: (context, index) {
         final item = Sensor.fromJson(latestSensorData![index]);

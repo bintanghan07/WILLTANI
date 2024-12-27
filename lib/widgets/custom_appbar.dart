@@ -151,7 +151,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _onProfileMenuSelected(String value, BuildContext context) {
     if (value == 'Logout') {
-      // Implement logout functionality here
       showDialog(
         context: context,
         builder: (BuildContext context) {

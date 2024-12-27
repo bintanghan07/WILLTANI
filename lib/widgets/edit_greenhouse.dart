@@ -28,7 +28,7 @@ class EditGreenhousePage extends StatefulWidget {
 }
 
 class _EditGreenhousePageState extends State<EditGreenhousePage> {
-  final _formKey = GlobalKey<FormState>(); // Declare and initialize _formKey
+  final _formKey = GlobalKey<FormState>(); 
   late TextEditingController _nameController;
   late TextEditingController _ownerController;
   late TextEditingController _managerController;
@@ -37,7 +37,6 @@ class _EditGreenhousePageState extends State<EditGreenhousePage> {
   late TextEditingController _plantTypeController;
   late TextEditingController _telegramIdController;
 
-  // File upload variable
   XFile? _image;
 
   @override
@@ -82,7 +81,7 @@ class _EditGreenhousePageState extends State<EditGreenhousePage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey, // Assign _formKey to the Form widget
+          key: _formKey, 
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +122,7 @@ class _EditGreenhousePageState extends State<EditGreenhousePage> {
                 const SizedBox(height: 5),
                 Container(
                   width: double.infinity,
-                  height: 50.0, // Set the height of the container
+                  height: 50.0, 
                   decoration: BoxDecoration(
                     color: const Color(0xFFBAC6CB),
                     borderRadius: BorderRadius.circular(50.0),
@@ -132,7 +131,7 @@ class _EditGreenhousePageState extends State<EditGreenhousePage> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 50.0, // Match the height of the button
+                          height: 50.0, 
                           decoration: BoxDecoration(
                             color: const Color(0xFFBAC6CB),
                             borderRadius: BorderRadius.circular(50.0),
@@ -169,15 +168,15 @@ class _EditGreenhousePageState extends State<EditGreenhousePage> {
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal:
-                                    20.0), // Padding for the button text
+                                    20.0), 
                             elevation:
-                                0, // Remove the button's shadow to match the container
+                                0,
                           ),
                           child: const Text(
                             'Choose File',
                             style: TextStyle(
                               color:
-                                  Colors.white, // Set the text color to white
+                                  Colors.white, 
                               fontWeight: FontWeight.bold,
                             ),
                           ),

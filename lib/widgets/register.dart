@@ -101,7 +101,6 @@ class _LargeChildState extends State<LargeChild> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Username field
                 TextFormField(
                   controller: usernameController,
                   decoration: InputDecoration(
@@ -121,7 +120,6 @@ class _LargeChildState extends State<LargeChild> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Email field
                 TextFormField(
                   controller: emailController,
                   decoration: InputDecoration(
@@ -164,7 +162,6 @@ class _LargeChildState extends State<LargeChild> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Password field
                 TextFormField(
                   controller: passwordController,
                   decoration: InputDecoration(
@@ -185,7 +182,6 @@ class _LargeChildState extends State<LargeChild> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Confirm Password field
                 TextFormField(
                   controller: confirmPasswordController,
                   decoration: InputDecoration(
@@ -206,7 +202,6 @@ class _LargeChildState extends State<LargeChild> {
                   },
                 ),
                 const SizedBox(height: 20),
-                // Register Button
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
@@ -225,14 +220,12 @@ class _LargeChildState extends State<LargeChild> {
                             await SharedPreferences.getInstance();
                         await prefs.setString('bearer_token', token);
 
-                        // Navigate to the dashboard on successful registration
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Dashboard()),
                         );
                       } else {
-                        // Handle errors here (e.g., show a Snackbar)
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Registration failed')),
                         );
@@ -449,15 +442,12 @@ class _SmallChildState extends State<SmallChild> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.setString('bearer_token', token);
-
-                        // Navigate to the dashboard on successful registration
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Dashboard()),
                         );
                       } else {
-                        // Handle errors here (e.g., show a Snackbar)
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Registration failed')),
                         );

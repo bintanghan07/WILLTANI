@@ -35,7 +35,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (bearerToken != null) {
-      // If token exists, navigate to the Dashboard
       Future.microtask(() {
         Navigator.pushReplacement(
           context,
@@ -96,7 +95,6 @@ class LargeChild extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          // Gambar navbar.png ditampilkan di sini
           FractionallySizedBox(
             alignment: Alignment.centerRight,
             widthFactor: .6,
@@ -196,7 +194,6 @@ class LargeChild extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Tombol Login
                       InkWell(
                         child: Container(
                           margin: const EdgeInsets.only(left: 20),

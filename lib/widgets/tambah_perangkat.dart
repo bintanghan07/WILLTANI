@@ -16,15 +16,12 @@ class Tambah_perangkat extends StatefulWidget {
 class _TambahPerangkatState extends State<Tambah_perangkat> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for the text fields
   final _nameController = TextEditingController();
   final _perangkatid = TextEditingController();
   final _keterangan = TextEditingController();
 
-  // Selected greenhouse
   GreenhouseM? _selectedGreenhouse;
 
-  // initstate textcontroller with perangkat
   @override
   void initState() {
     super.initState();
@@ -84,7 +81,7 @@ class _TambahPerangkatState extends State<Tambah_perangkat> {
                 const SizedBox(height: 5),
                 Container(
                   width: double.infinity,
-                  height: 50.0, // Set the height of the container
+                  height: 50.0, 
                   decoration: BoxDecoration(
                     color: const Color(0xFFBAC6CB),
                     borderRadius: BorderRadius.circular(50.0),
@@ -93,7 +90,7 @@ class _TambahPerangkatState extends State<Tambah_perangkat> {
                     children: [
                       Expanded(
                         child: Container(
-                          height: 50.0, // Match the height of the button
+                          height: 50.0, 
                           decoration: BoxDecoration(
                             color: const Color(0xFFBAC6CB),
                             borderRadius: BorderRadius.circular(50.0),
@@ -112,20 +109,19 @@ class _TambahPerangkatState extends State<Tambah_perangkat> {
                           onPressed: () => _showGreenhouseDialog(),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF294A52),
-                            // Make the button background transparent
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0)),
                             padding: const EdgeInsets.symmetric(
                                 horizontal:
-                                    20.0), // Padding for the button text
+                                    20.0), 
                             elevation:
-                                0, // Remove the button's shadow to match the container
+                                0, 
                           ),
                           child: Text(
                             _selectedGreenhouse?.nama ?? 'Pilih Greenhouse',
                             style: const TextStyle(
                               color:
-                                  Colors.white, // Set the text color to white
+                                  Colors.white, 
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -150,7 +146,7 @@ class _TambahPerangkatState extends State<Tambah_perangkat> {
                           };
 
                           Navigator.pop(
-                              context, newDevice); // Mengembalikan data baru
+                              context, newDevice); 
                         }
                       },
                       style: ElevatedButton.styleFrom(

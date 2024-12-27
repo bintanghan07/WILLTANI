@@ -22,14 +22,10 @@ class Login extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => const HomePage(
                         bearerToken: null,
-                      )), // Replace with your widget
+                      )), 
             );
           },
         ),
-        // title: Image.asset(
-        //   "assets/logofix.png",
-        //   height: 40,
-        // ),
       ),
       body: Body(
         apiService: apiService,
@@ -155,7 +151,6 @@ class _LargeChildState extends State<LargeChild> {
                           MaterialPageRoute(builder: (context) => Dashboard()),
                         );
                       } else {
-                        // Handle errors here (e.g., show a Snackbar)
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Login failed')),
                         );
@@ -290,7 +285,6 @@ class _SmallChildState extends State<SmallChild> {
                               builder: (context) => const Dashboard()),
                         );
                       } else {
-                        // Handle errors here (e.g., show a Snackbar)
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Login failed')),
                         );

@@ -10,18 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.1.2
-  fl_chart: ^0.69.0
-  chopper: ^8.0.3 # Check for the latest version
-  json_serializable: ^6.1.5 # For JSON serialization
+  fl_chart: ^0.70.0
+  chopper: ^8.0.3 
+  json_serializable: ^6.1.5 
   shared_preferences: ^2.0.0
-  intl: ^0.18.0
+  intl: ^0.20.1
   http_parser: ^4.0.0
   http: ^1.2.2
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   build_runner: ^2.3.0
   chopper_generator: ^8.0.3
 

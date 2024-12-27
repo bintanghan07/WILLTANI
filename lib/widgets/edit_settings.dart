@@ -4,7 +4,7 @@ import 'package:webagro/models/kontrol.dart';
 
 class EditSettings extends StatefulWidget {
   final KontrolM kontrolM;
-  final String token; // Pass the authorization token
+  final String token; 
 
   const EditSettings({
     super.key,
@@ -63,7 +63,7 @@ class _EditSettingsState extends State<EditSettings> {
     super.dispose();
   }
 
-  // Handle form submission and API call
+
   Future<void> _updateSettings() async {
     if (_formKey.currentState!.validate()) {
       final updatedData = {
@@ -79,11 +79,10 @@ class _EditSettingsState extends State<EditSettings> {
       };
 
       try {
-        // Make the PUT request using the ApiClient
         final response = await ApiClient().apiService.updateKontrolData(
-              'Bearer ${widget.token}', // Pass the token for authorization
-              widget.kontrolM.perangkatId, // Pass the ID of the control
-              updatedData, // Pass the updated data
+              'Bearer ${widget.token}', 
+              widget.kontrolM.perangkatId, 
+              updatedData, 
             );
 
         if (response.isSuccessful) {
@@ -91,13 +90,11 @@ class _EditSettingsState extends State<EditSettings> {
               const SnackBar(content: Text("sukses rubah setting!")));
           Navigator.pop(context, updatedData);
         } else {
-          // Handle error
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Update failed: ${response.error}')),
           );
         }
       } catch (e) {
-        // Handle any errors during the API call
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error: $e')),
         );
@@ -183,7 +180,6 @@ class _EditSettingsState extends State<EditSettings> {
     );
   }
 
-  // Text field builder
   Widget _buildLabeledTextField(
       String label, TextEditingController controller) {
     return Column(

@@ -7,7 +7,6 @@ import 'package:webagro/models/greenhouse.dart';
 import 'package:webagro/utils/responsiveLayout.dart';
 import 'package:webagro/widgets/custom_appbar.dart';
 
-// Model untuk Grafik
 class GrafikM {
   final String name;
   final List<String> labels;
@@ -19,14 +18,22 @@ class GrafikM {
     required this.data,
   });
 
-  // Parsing JSON ke objek GrafikM
   factory GrafikM.fromJson(Map<String, dynamic> json) {
     return GrafikM(
       name: json['name'] as String,
-      labels: List<String>.from(json['labels']),
+      labels: List<String>.from(json['labels'] ?? []), 
       data: List<double>.from(
-        json['data'].map((item) => (item is int ? item.toDouble() : item)),
-      ),
+       (json['data'] as List).map((item) {
+        if (item is int) {
+          return item.toDouble(); 
+        } else if (item is String) {
+          return double.tryParse(item) ?? 0.0; 
+        } else if (item is double) {
+          return item; 
+        } else {
+          throw FormatException('Invalid data type: $item'); 
+        }
+  }),),
     );
   }
 }
@@ -69,7 +76,7 @@ class _GrafikState extends State<Grafik> {
 
   Future<void> _fetchLatestSensor() async {
     final response = await apiService.getGraphSensorData(
-        'Bearer $token', selectedGreenhouse); // Pass the token
+        'Bearer $token', selectedGreenhouse); 
     if (response.isSuccessful) {
       final graphData = response.body["data"];
       print('Received Graph Data: $graphData');
@@ -102,8 +109,7 @@ class _GrafikState extends State<Grafik> {
 
   Future<void> _fetchGreenhouses() async {
     final response =
-        await apiService.getAllGreenhouses('Bearer $token'); // Pass the token
-
+        await apiService.getAllGreenhouses('Bearer $token'); 
     if (response.isSuccessful) {
       setState(() {
         greenhouses = (response.body["data"] as List)

@@ -18,7 +18,6 @@ class TambahGreenhouse extends StatefulWidget {
 class _TambahGreenhouseState extends State<TambahGreenhouse> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for the text fields
   final _nameController = TextEditingController();
   final _ownerController = TextEditingController();
   final _addressController = TextEditingController();
@@ -27,7 +26,6 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
   final _plantTypeController = TextEditingController();
   final _telegramIdController = TextEditingController();
 
-  // File upload variable
   XFile? _image;
 
   Future<void> _pickImage() async {
@@ -69,7 +67,6 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
 
   @override
   void dispose() {
-    // Clean up the controllers when the widget is disposed
     _nameController.dispose();
     _ownerController.dispose();
     _addressController.dispose();
@@ -101,7 +98,7 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
                         ? 'Tambah Greenhouse'
                         : 'Edit Greenhouse',
                     style: const TextStyle(
-                      fontSize: 24, // Larger font size
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF33697C),
                     ),
@@ -135,7 +132,7 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
                   children: [
                     Expanded(
                       child: Container(
-                        height: 50.0, // Match the height of the button
+                        height: 50.0, 
                         decoration: BoxDecoration(
                           color: const Color(0xFFBAC6CB),
                           borderRadius: BorderRadius.circular(50.0),
@@ -169,7 +166,7 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           elevation:
-                              0, // Remove the button's shadow to match the container
+                              0, 
                         ),
                         child: const Text(
                           'Choose File',
@@ -236,10 +233,8 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
       };
 
       if (widget.greenhouse == null) {
-        // Add greenhouse logic
         _addGreenhouse(newGreenhouse);
       } else {
-        // Edit greenhouse logic
         _editGreenhouse(widget.greenhouse!.id, newGreenhouse);
       }
     }
@@ -248,7 +243,6 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
   Future<void> _editGreenhouse(
       int id, Map<String, dynamic> updatedGreenhouse) async {
     try {
-      // Prepare image file as MultipartFile
       final imageFile = updatedGreenhouse['image'] as XFile?;
       http.MultipartFile? multipartImage;
 
@@ -274,7 +268,6 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
         multipartImage?.filename ?? "",
         multipartImage!,
         id,
-        // Ensure the image is sent
       );
 
       if (response.isSuccessful) {
@@ -289,7 +282,6 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
 
   Future<void> _addGreenhouse(Map<String, dynamic> newGreenhouse) async {
     try {
-      // Prepare image file as MultipartFile
       final imageFile = newGreenhouse['image'] as XFile?;
       http.MultipartFile? multipartImage;
       if (imageFile != null) {
@@ -312,7 +304,7 @@ class _TambahGreenhouseState extends State<TambahGreenhouse> {
         newGreenhouse['pengelola'],
         newGreenhouse['jenis_tanaman_id'],
         multipartImage!.filename ?? "",
-        multipartImage, // Ensure the image is sent
+        multipartImage,
       );
 
       if (response.isSuccessful) {
